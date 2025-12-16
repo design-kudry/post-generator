@@ -760,13 +760,13 @@ async function renderOne(index) {
     
     if (layoutStyle === 'bottom') {
         // Для стиля 3 нужно посчитать высоту всего контента
-        ctx.font = `${settings.titleWeight} ${settings.titleSize}px ${settings.titleFont}`;
+        ctx.font = `${settings.titleWeight} ${settings.titleSize}px "${settings.titleFont}", sans-serif`;
         const titleLines = wrapText(ctx, typograph(slide.title), contentWidth);
         const titleHeight = titleLines.length * settings.titleSize * 1.2;
         
         let textHeight = 0;
         if (slide.text) {
-            ctx.font = `${settings.textWeight} ${settings.fontSize}px ${settings.textFont}`;
+            ctx.font = `${settings.textWeight} ${settings.fontSize}px "${settings.textFont}", sans-serif`;
             const textLines = wrapText(ctx, typograph(slide.text), contentWidth);
             textHeight = textLines.length * settings.fontSize * 1.4;
         }
@@ -808,7 +808,7 @@ async function renderOne(index) {
     
     // Футер (рендерим первым, так как может быть вверху или внизу)
     ctx.fillStyle = settings.footerColor;
-    ctx.font = `${settings.footerWeight} ${settings.footerSize}px ${settings.footerFont}`;
+    ctx.font = `${settings.footerWeight} ${settings.footerSize}px "${settings.footerFont}", sans-serif`;
     
     // Username слева
     ctx.textAlign = 'left';
@@ -820,7 +820,7 @@ async function renderOne(index) {
     
     // Заголовок (с типографом)
     ctx.fillStyle = settings.titleColor;
-    ctx.font = `${settings.titleWeight} ${settings.titleSize}px ${settings.titleFont}`;
+    ctx.font = `${settings.titleWeight} ${settings.titleSize}px "${settings.titleFont}", sans-serif`;
     ctx.textAlign = 'left';
     const titleLines = wrapText(ctx, typograph(slide.title), contentWidth);
     let y = titleY;
@@ -836,7 +836,7 @@ async function renderOne(index) {
     // Основной текст (с типографом)
     if (slide.text) {
         ctx.fillStyle = settings.textColor;
-        ctx.font = `${settings.textWeight} ${settings.fontSize}px ${settings.textFont}`;
+        ctx.font = `${settings.textWeight} ${settings.fontSize}px "${settings.textFont}", sans-serif`;
         const textLines = wrapText(ctx, typograph(slide.text), contentWidth);
         
         y = textY;
