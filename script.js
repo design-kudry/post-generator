@@ -175,6 +175,25 @@ function loadSettings() {
     }
 }
 
+// Функция предзагрузки шрифтов для Canvas
+async function preloadFonts() {
+    const fonts = [
+        new FontFace('Better VCR', 'url(BetterVCR9.0.1.ttf)', { weight: '400' }),
+        new FontFace('Brusnika', 'url(Brusnika-normal_version_02.otf)', { weight: '400' }),
+        new FontFace('Maki Sans', 'url(MakiSans-Regular.otf)', { weight: '400' }),
+        new FontFace('Maki Sans', 'url(MakiSans-Bold.otf)', { weight: '700' }),
+        new FontFace('Nauryz', 'url(NAURYZREDKEDS.ttf)', { weight: '400' })
+    ];
+    
+    try {
+        const loadedFonts = await Promise.all(fonts.map(font => font.load()));
+        loadedFonts.forEach(font => document.fonts.add(font));
+        console.log('Все шрифты загружены');
+    } catch (err) {
+        console.error('Ошибка загрузки шрифтов:', err);
+    }
+}
+
 // Загружаем сохраненный API ключ
 if (localStorage.getItem('aiApiKey')) {
     aiApiKey.value = localStorage.getItem('aiApiKey');
@@ -185,6 +204,9 @@ if (localStorage.getItem('aiProvider')) {
 
 // Загружаем сохраненные настройки
 loadSettings();
+
+// Предзагружаем шрифты для Canvas
+preloadFonts();
 
 // Обработчики событий - переключение режимов
 manualModeBtn.addEventListener('click', () => {
