@@ -2,6 +2,37 @@
 const CANVAS_W = 1012;
 const CANVAS_H = 1350;
 
+// Доступные начертания для каждого шрифта
+const FONT_WEIGHTS = {
+    'Helvetica': [
+        { value: '300', label: 'Light' },
+        { value: '400', label: 'Regular' },
+        { value: '500', label: 'Medium' },
+        { value: '600', label: 'Semibold' },
+        { value: '700', label: 'Bold' }
+    ],
+    'Inter': [
+        { value: '300', label: 'Light' },
+        { value: '400', label: 'Regular' },
+        { value: '500', label: 'Medium' },
+        { value: '600', label: 'Semibold' },
+        { value: '700', label: 'Bold' }
+    ],
+    'Better VCR': [
+        { value: '400', label: 'Regular' }
+    ],
+    'Brusnika': [
+        { value: '400', label: 'Regular' }
+    ],
+    'Maki Sans': [
+        { value: '400', label: 'Regular' },
+        { value: '700', label: 'Bold' }
+    ],
+    'Nauryz': [
+        { value: '400', label: 'Regular' }
+    ]
+};
+
 // Типограф - базовая обработка текста
 function typograph(text) {
     if (!text) return text;
@@ -19,12 +50,12 @@ const settings = {
     titleColor: '#ffffff',
     textColor: '#ffffff',
     footerColor: '#ffffff',
-    fontSize: 36,
-    titleSize: 48,
+    fontSize: 40,
+    titleSize: 44,
     footerSize: 32,
-    titleFont: 'Arial',
-    textFont: 'Arial',
-    footerFont: 'Arial',
+    titleFont: 'Helvetica',
+    textFont: 'Helvetica',
+    footerFont: 'Helvetica',
     titleWeight: '400',
     textWeight: '400',
     footerWeight: '400'
@@ -84,6 +115,66 @@ filePicker.accept = 'image/*';
 filePicker.style.display = 'none';
 document.body.appendChild(filePicker);
 
+// Функция сохранения настроек
+function saveSettings() {
+    localStorage.setItem('settings', JSON.stringify(settings));
+}
+
+// Функция загрузки настроек
+function loadSettings() {
+    const saved = localStorage.getItem('settings');
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        Object.assign(settings, parsed);
+        
+        // Обновляем UI элементы
+        usernameInput.value = settings.username;
+        layoutStyleSelect.value = settings.layoutStyle;
+        overlayStyleSelect.value = settings.overlayStyle;
+        opacitySlider.value = settings.opacity * 100;
+        opacityValue.textContent = settings.opacity.toFixed(2);
+        
+        bgColorInput.value = settings.bgColor;
+        bgColorHexInput.value = settings.bgColor;
+        titleColorInput.value = settings.titleColor;
+        titleColorHexInput.value = settings.titleColor;
+        textColorInput.value = settings.textColor;
+        textColorHexInput.value = settings.textColor;
+        footerColorInput.value = settings.footerColor;
+        footerColorHexInput.value = settings.footerColor;
+        
+        titleSizeSlider.value = settings.titleSize;
+        fontSizeSlider.value = settings.fontSize;
+        footerSizeInput.value = settings.footerSize;
+        
+        titleFontInput.value = settings.titleFont;
+        textFontInput.value = settings.textFont;
+        footerFontInput.value = settings.footerFont;
+        
+        titleWeightInput.value = settings.titleWeight;
+        textWeightInput.value = settings.textWeight;
+        footerWeightInput.value = settings.footerWeight;
+        
+        // Обновляем доступные веса для каждого шрифта
+        updateFontWeights(settings.titleFont, titleWeightInput);
+        titleWeightInput.value = settings.titleWeight;
+        
+        updateFontWeights(settings.textFont, textWeightInput);
+        textWeightInput.value = settings.textWeight;
+        
+        updateFontWeights(settings.footerFont, footerWeightInput);
+        footerWeightInput.value = settings.footerWeight;
+        
+        // Обновляем видимость прозрачности
+        const opacityGroup = document.getElementById('opacityGroup');
+        if (settings.overlayStyle === 'none') {
+            opacityGroup.style.display = 'none';
+        } else {
+            opacityGroup.style.display = 'flex';
+        }
+    }
+}
+
 // Загружаем сохраненный API ключ
 if (localStorage.getItem('aiApiKey')) {
     aiApiKey.value = localStorage.getItem('aiApiKey');
@@ -91,6 +182,9 @@ if (localStorage.getItem('aiApiKey')) {
 if (localStorage.getItem('aiProvider')) {
     aiProvider.value = localStorage.getItem('aiProvider');
 }
+
+// Загружаем сохраненные настройки
+loadSettings();
 
 // Обработчики событий - переключение режимов
 manualModeBtn.addEventListener('click', () => {
@@ -289,6 +383,7 @@ addSlideBtn.addEventListener('click', async () => {
 
 usernameInput.addEventListener('input', (e) => {
     settings.username = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -300,6 +395,7 @@ layoutStyleSelect.addEventListener('change', (e) => {
         slide.layoutStyle = settings.layoutStyle;
     });
     
+    saveSettings();
     renderAllSlides();
 });
 
@@ -319,6 +415,7 @@ overlayStyleSelect.addEventListener('change', (e) => {
         slide.overlayStyle = settings.overlayStyle;
     });
     
+    saveSettings();
     renderAllSlides();
 });
 
@@ -331,24 +428,56 @@ opacitySlider.addEventListener('input', (e) => {
         slide.opacity = settings.opacity;
     });
     
+    saveSettings();
     renderAllSlides();
 });
 
 fontSizeSlider.addEventListener('change', (e) => {
     settings.fontSize = parseInt(e.target.value);
+    saveSettings();
     renderAllSlides();
 });
 
 titleSizeSlider.addEventListener('change', (e) => {
     settings.titleSize = parseInt(e.target.value);
+    saveSettings();
     renderAllSlides();
 });
 
 // Footer size
 footerSizeInput.addEventListener('change', (e) => {
     settings.footerSize = parseInt(e.target.value);
+    saveSettings();
     renderAllSlides();
 });
+
+// Функция для обновления доступных весов шрифта
+function updateFontWeights(fontName, weightSelect) {
+    const weights = FONT_WEIGHTS[fontName] || FONT_WEIGHTS['Helvetica'];
+    
+    // Очищаем текущие опции
+    weightSelect.innerHTML = '';
+    
+    // Добавляем доступные веса
+    weights.forEach(weight => {
+        const option = document.createElement('option');
+        option.value = weight.value;
+        option.textContent = weight.label;
+        weightSelect.appendChild(option);
+    });
+    
+    // Если только один вес - делаем disabled
+    if (weights.length === 1) {
+        weightSelect.disabled = true;
+        weightSelect.value = weights[0].value;
+    } else {
+        weightSelect.disabled = false;
+        // Пытаемся сохранить текущий вес или ставим первый доступный
+        const currentWeight = weightSelect.dataset.currentWeight || '400';
+        const availableValues = weights.map(w => w.value);
+        weightSelect.value = availableValues.includes(currentWeight) ? currentWeight : weights[0].value;
+    }
+}
 
 titleFontInput.addEventListener('change', (e) => {
     if (e.target.value === 'custom') {
@@ -356,7 +485,14 @@ titleFontInput.addEventListener('change', (e) => {
     } else {
         titleFontCustom.style.display = 'none';
         settings.titleFont = e.target.value;
+        
+        // Обновляем доступные веса
+        titleWeightInput.dataset.currentWeight = settings.titleWeight;
+        updateFontWeights(e.target.value, titleWeightInput);
+        settings.titleWeight = titleWeightInput.value;
+        
         loadFontIfNeeded(settings.titleFont);
+        saveSettings();
         renderAllSlides();
     }
 });
@@ -364,11 +500,13 @@ titleFontInput.addEventListener('change', (e) => {
 titleFontCustom.addEventListener('input', (e) => {
     settings.titleFont = e.target.value || 'Inter';
     loadFontIfNeeded(settings.titleFont);
+    saveSettings();
     renderAllSlides();
 });
 
 titleWeightInput.addEventListener('change', (e) => {
     settings.titleWeight = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -378,7 +516,14 @@ textFontInput.addEventListener('change', (e) => {
     } else {
         textFontCustom.style.display = 'none';
         settings.textFont = e.target.value;
+        
+        // Обновляем доступные веса
+        textWeightInput.dataset.currentWeight = settings.textWeight;
+        updateFontWeights(e.target.value, textWeightInput);
+        settings.textWeight = textWeightInput.value;
+        
         loadFontIfNeeded(settings.textFont);
+        saveSettings();
         renderAllSlides();
     }
 });
@@ -386,11 +531,13 @@ textFontInput.addEventListener('change', (e) => {
 textFontCustom.addEventListener('input', (e) => {
     settings.textFont = e.target.value || 'Inter';
     loadFontIfNeeded(settings.textFont);
+    saveSettings();
     renderAllSlides();
 });
 
 textWeightInput.addEventListener('change', (e) => {
     settings.textWeight = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -398,6 +545,7 @@ textWeightInput.addEventListener('change', (e) => {
 bgColorInput.addEventListener('input', (e) => {
     settings.bgColor = e.target.value;
     bgColorHexInput.value = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -406,6 +554,7 @@ bgColorHexInput.addEventListener('input', (e) => {
     if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
         settings.bgColor = color;
         bgColorInput.value = color;
+        saveSettings();
         renderAllSlides();
     }
 });
@@ -413,6 +562,7 @@ bgColorHexInput.addEventListener('input', (e) => {
 titleColorInput.addEventListener('input', (e) => {
     settings.titleColor = e.target.value;
     titleColorHexInput.value = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -421,6 +571,7 @@ titleColorHexInput.addEventListener('input', (e) => {
     if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
         settings.titleColor = color;
         titleColorInput.value = color;
+        saveSettings();
         renderAllSlides();
     }
 });
@@ -428,6 +579,7 @@ titleColorHexInput.addEventListener('input', (e) => {
 textColorInput.addEventListener('input', (e) => {
     settings.textColor = e.target.value;
     textColorHexInput.value = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -436,6 +588,7 @@ textColorHexInput.addEventListener('input', (e) => {
     if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
         settings.textColor = color;
         textColorInput.value = color;
+        saveSettings();
         renderAllSlides();
     }
 });
@@ -443,6 +596,7 @@ textColorHexInput.addEventListener('input', (e) => {
 footerColorInput.addEventListener('input', (e) => {
     settings.footerColor = e.target.value;
     footerColorHexInput.value = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -451,6 +605,7 @@ footerColorHexInput.addEventListener('input', (e) => {
     if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
         settings.footerColor = color;
         footerColorInput.value = color;
+        saveSettings();
         renderAllSlides();
     }
 });
@@ -462,7 +617,14 @@ footerFontInput.addEventListener('change', (e) => {
     } else {
         footerFontCustom.style.display = 'none';
         settings.footerFont = e.target.value;
+        
+        // Обновляем доступные веса
+        footerWeightInput.dataset.currentWeight = settings.footerWeight;
+        updateFontWeights(e.target.value, footerWeightInput);
+        settings.footerWeight = footerWeightInput.value;
+        
         loadFontIfNeeded(settings.footerFont);
+        saveSettings();
         renderAllSlides();
     }
 });
@@ -470,11 +632,13 @@ footerFontInput.addEventListener('change', (e) => {
 footerFontCustom.addEventListener('input', (e) => {
     settings.footerFont = e.target.value || 'Inter';
     loadFontIfNeeded(settings.footerFont);
+    saveSettings();
     renderAllSlides();
 });
 
 footerWeightInput.addEventListener('change', (e) => {
     settings.footerWeight = e.target.value;
+    saveSettings();
     renderAllSlides();
 });
 
@@ -585,7 +749,7 @@ async function renderOne(index) {
             textHeight = textLines.length * settings.fontSize * 1.4;
         }
         
-        totalContentHeight = titleHeight + settings.titleSize * 0.5 + textHeight;
+        totalContentHeight = titleHeight + settings.titleSize * 0.3 + textHeight;
     }
     
     // Рассчитываем позиции в зависимости от layoutStyle
@@ -603,6 +767,22 @@ async function renderOne(index) {
         // Контент заканчивается на padding (48px) от низа
         titleY = CANVAS_H - padding - totalContentHeight;
     }
+    
+    // Градиент для футера (затемнение для лучшей читаемости)
+    const footerGradient = ctx.createLinearGradient(0, 0, 0, CANVAS_H);
+    if (layoutStyle === 'bottom') {
+        // Если футер вверху - затемнение сверху
+        footerGradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
+        footerGradient.addColorStop(0.15, 'rgba(0, 0, 0, 0)');
+        footerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    } else {
+        // Если футер внизу - затемнение снизу
+        footerGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        footerGradient.addColorStop(0.85, 'rgba(0, 0, 0, 0)');
+        footerGradient.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
+    }
+    ctx.fillStyle = footerGradient;
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
     
     // Футер (рендерим первым, так как может быть вверху или внизу)
     ctx.fillStyle = settings.footerColor;
@@ -629,7 +809,7 @@ async function renderOne(index) {
     });
     
     // Отступ между заголовком и текстом
-    textY = y + settings.titleSize * 0.5;
+    textY = y + settings.titleSize * 0.3;
     
     // Основной текст (с типографом)
     if (slide.text) {

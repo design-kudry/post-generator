@@ -3,3 +3,9 @@ node_modules/
 *.log
 .vscode/
 .idea/
+
+# Шрифты
+*.ttf
+*.otf
+*.woff
+*.woff2

@@ -1,3 +1,38 @@
+@font-face {
+    font-family: 'Better VCR';
+    src: url('BetterVCR9.0.1.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brusnika';
+    src: url('Brusnika-normal_version_02.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Maki Sans';
+    src: url('MakiSans-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Maki Sans';
+    src: url('MakiSans-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nauryz';
+    src: url('NAURYZREDKEDS.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     --color-white-solid: white;
     --color-azure-5: #0B0C0E;
