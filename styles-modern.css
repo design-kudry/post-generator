@@ -68,11 +68,14 @@ body {
 
 .form-container {
     width: 459px;
+    min-width: 459px;
+    max-width: 459px;
     background: #020202;
     display: flex;
     flex-direction: column;
     border-right: 1px solid #363636;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .form-header {
