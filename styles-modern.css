@@ -527,7 +527,6 @@ button:disabled {
     align-self: stretch;
     height: 44px;
     padding: 14px 24px;
-    margin: 0 32px;
     background: var(--accent-color);
     overflow: hidden;
     border-radius: 20px;
@@ -579,7 +578,7 @@ button:disabled {
     display: flex;
     flex-wrap: wrap;
     gap: 0;
-    padding: 0;
+    padding: 32px;
     align-content: flex-start;
     overflow-y: auto;
     overflow-x: hidden;
@@ -604,14 +603,22 @@ button:disabled {
 }
 
 .slides-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    gap: 32px 18px;
 }
 
 .slide-wrapper {
-    position: relative;
+    width: 289px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 12px;
+    display: inline-flex;
     cursor: grab;
     transition: opacity 0.3s, transform 0.3s;
 }
@@ -631,13 +638,14 @@ button:disabled {
 }
 
 .slide-preview {
-    width: 100%;
+    align-self: stretch;
+    height: 386px;
     border-radius: 20px;
-    box-shadow: 0px 25px 125px -4px rgba(255, 255, 255, 0.02) inset;
     border: 1px solid #363636;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: block;
+    object-fit: cover;
 }
 
 .slide-preview:hover {
@@ -647,25 +655,28 @@ button:disabled {
 }
 
 .slide-controls {
-    margin-top: 12px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    align-self: stretch;
+    justify-content: space-between;
+    align-items: flex-start;
+    display: inline-flex;
 }
 
 .slide-btn {
-    height: 44px;
+    height: 34px;
     padding: 0 16px;
-    border: none;
-    border-radius: 16px;
     background: var(--accent-color);
+    border-radius: 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: flex;
     color: var(--text-primary);
-    cursor: pointer;
     font-size: 14px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 500;
+    font-family: Arial, sans-serif;
+    font-weight: 400;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid var(--accent-color);
 }
 
 .slide-btn:hover {
@@ -675,9 +686,18 @@ button:disabled {
 }
 
 .slide-btn-secondary {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
+    width: 34px;
+    height: 34px;
+    background: rgba(54, 54, 54, 0.46);
+    border-radius: 12px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
 }
 
 .slide-btn-secondary:hover {
@@ -694,12 +714,12 @@ button:disabled {
 /* Footer */
 .form-footer {
     align-self: stretch;
-    padding: 24px 0;
+    padding: 24px 32px;
     background: #020202;
     border-top: 1px solid #363636;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: stretch;
     display: flex;
 }
 
