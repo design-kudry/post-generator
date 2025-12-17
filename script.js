@@ -53,6 +53,7 @@ const settings = {
     fontSize: 40,
     titleSize: 44,
     footerSize: 32,
+    titleTextGap: 32,
     titleFont: 'Helvetica',
     textFont: 'Helvetica',
     footerFont: 'Helvetica',
@@ -83,6 +84,7 @@ const usernameInput = document.getElementById('username');
 const layoutStyleSelect = document.getElementById('layoutStyle');
 const overlayStyleSelect = document.getElementById('overlayStyle');
 const opacitySlider = document.getElementById('opacity');
+const titleTextGapSlider = document.getElementById('titleTextGap');
 const fontSizeSlider = document.getElementById('fontSize');
 const titleSizeSlider = document.getElementById('titleSize');
 const footerSizeSlider = document.getElementById('footerSize');
@@ -146,6 +148,7 @@ function loadSettings() {
         titleSizeSlider.value = settings.titleSize;
         fontSizeSlider.value = settings.fontSize;
         footerSizeInput.value = settings.footerSize;
+        titleTextGapSlider.value = settings.titleTextGap;
         
         titleFontInput.value = settings.titleFont;
         textFontInput.value = settings.textFont;
@@ -213,7 +216,7 @@ manualModeBtn.addEventListener('click', () => {
     currentMode = 'manual';
     manualModeBtn.classList.add('active');
     aiModeBtn.classList.remove('active');
-    manualMode.style.display = 'flex';
+    manualMode.style.display = 'block';
     aiMode.style.display = 'none';
     addSlideBtn.textContent = 'Добавить слайд';
 });
@@ -222,7 +225,7 @@ aiModeBtn.addEventListener('click', () => {
     currentMode = 'ai';
     aiModeBtn.classList.add('active');
     manualModeBtn.classList.remove('active');
-    aiMode.style.display = 'flex';
+    aiMode.style.display = 'block';
     manualMode.style.display = 'none';
     addSlideBtn.textContent = 'Сгенерировать слайды';
 });
@@ -450,6 +453,13 @@ opacitySlider.addEventListener('input', (e) => {
         slide.opacity = settings.opacity;
     });
     
+    saveSettings();
+    renderAllSlides();
+});
+
+titleTextGapSlider.addEventListener('input', (e) => {
+    settings.titleTextGap = parseInt(e.target.value);
+    document.getElementById('titleTextGapValue').textContent = e.target.value + 'px';
     saveSettings();
     renderAllSlides();
 });
@@ -771,7 +781,7 @@ async function renderOne(index) {
             textHeight = textLines.length * settings.fontSize * 1.4;
         }
         
-        totalContentHeight = titleHeight + settings.titleSize * 0.3 + textHeight;
+        totalContentHeight = titleHeight + settings.titleTextGap + textHeight;
     }
     
     // Рассчитываем позиции в зависимости от layoutStyle
@@ -831,7 +841,7 @@ async function renderOne(index) {
     });
     
     // Отступ между заголовком и текстом
-    textY = y + settings.titleSize * 0.3;
+    textY = y + settings.titleTextGap;
     
     // Основной текст (с типографом)
     if (slide.text) {

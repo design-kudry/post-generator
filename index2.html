@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор Постов для Instagram</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Public+Sans:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-modern.css?v=4">
+    <style>
+        .input-group { display: flex !important; flex-direction: column !important; margin-bottom: 28px !important; }
+        .input-group input[type="text"],
+        .input-group input[type="url"],
+        .input-group input[type="password"],
+        .input-group textarea,
+        .input-group select { 
+            width: 100% !important; 
+            height: 44px !important;
+            padding: 12px 16px !important; 
+            background: #020202 !important; 
+            color: #F2F2F2 !important; 
+            border: 1px solid #363636 !important;
+            border-radius: 20px !important;
+            font-size: 14px !important;
+        }
+        .input-group textarea { 
+            height: 120px !important; 
+            min-height: 120px !important; 
+            padding-top: 12px !important;
+        }
+        button { height: 48px !important; padding: 14px 24px !important; font-size: 15px !important; }
+        .mode-toggle button { padding: 12px 20px !important; font-size: 14px !important; }
+        .slide { width: 253px !important; flex-shrink: 0 !important; }
+        .results { gap: 24px !important; padding: 32px !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1>Генератор постов</h1>
+                <p>Создавайте красивые посты для Instagram с помощью ИИ или вручную</p>
+            </div>
+
+            <div class="form-body">
+                <div class="mode-toggle">
+                    <button id="manualModeBtn" class="active">Ручной режим</button>
+                    <button id="aiModeBtn">AI режим</button>
+                </div>
+
+                <!-- Ручной режим -->
+                <div id="manualMode" class="manual-mode active">
+                    <div class="input-section">
+                        <label for="slideTitle">
+                            Заголовок слайда
+                        </label>
+                        <input type="text" id="slideTitle" placeholder="Введите заголовок">
+                    </div>
+
+                    <div class="input-section">
+                        <label for="slideText">
+                            Текст слайда
+                            <span class="hint"></span>
+                        </label>
+                        <textarea 
+                            id="slideText" 
+                            placeholder="Введите текст"
+                            rows="6"
+                        ></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="slideImage">Фоновое изображение</label>
+                        <input type="file" id="slideImage" accept="image/*" style="display: none;">
+                        <button id="uploadImageBtn" class="btn-upload">Загрузить изображение</button>
+                        <span id="imageFileName" class="file-name"></span>
+                    </div>
+                </div>
+
+                <!-- AI режим -->
+                <div id="aiMode" class="ai-mode">
+                    <div class="input-group">
+                        <label for="aiText">Текст для разбиения на слайды</label>
+                        <textarea 
+                            id="aiText" 
+                            placeholder="Вставьте ваш текст здесь. AI автоматически разделит его на слайды..."
+                        ></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="aiProvider">Провайдер AI</label>
+                        <select id="aiProvider">
+                            <option value="free">Авто-разбиение (без AI, работает всегда)</option>
+                            <option value="groq">Groq (Бесплатно с регистрацией)</option>
+                            <option value="openai">OpenAI (GPT-4)</option>
+                            <option value="claude">Anthropic (Claude)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="aiApiKey">API ключ</label>
+                        <input type="password" id="aiApiKey" placeholder="Необязательно для Groq">
+                        <span class="hint" id="apiKeyHint">Groq бесплатный, ключ не требуется. <a href="https://console.groq.com/keys" target="_blank">Получить ключ Groq</a></span>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Настройки</h3>
+                    
+                    <div class="input-group">
+                        <label for="username">Имя пользователя</label>
+                        <input type="text" id="username" value="Design.kudry" placeholder="Введите имя пользователя">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="layoutStyle">Стиль расположения</label>
+                        <select id="layoutStyle">
+                            <option value="top">Стиль 1 - Сверху</option>
+                            <option value="center">Стиль 2 - По центру</option>
+                            <option value="bottom">Стиль 3 - Снизу</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="overlayStyle">Стиль оверлея</label>
+                        <select id="overlayStyle">
+                            <option value="shadow">Тень</option>
+                            <option value="gradient">Градиент</option>
+                            <option value="none">Ничего</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" id="opacityGroup">
+                        <label for="opacity">Прозрачность фона</label>
+                        <input type="range" id="opacity" min="0" max="100" value="60" step="5">
+                        <span class="range-value" id="opacityValue">0.60</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="titleTextGap">Отступ заголовок → текст</label>
+                        <input type="range" id="titleTextGap" min="0" max="100" value="32" step="4">
+                        <span class="range-value" id="titleTextGapValue">32px</span>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Стиль текста</h3>
+                    
+                    <div class="input-group">
+                        <label for="titleFont">Шрифт заголовка</label>
+                        <select id="titleFont" class="font-select">
+                            <option value="Helvetica" selected>Helvetica</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Better VCR">Better VCR</option>
+                            <option value="Brusnika">Brusnika</option>
+                            <option value="Maki Sans">Maki Sans</option>
+                            <option value="Nauryz">Nauryz</option>
+                            <option value="custom">Свой шрифт (URL)</option>
+                        </select>
+                        <input type="text" id="titleFontCustom" placeholder="Например: https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" style="display: none; margin-top: 6px;">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Стиль заголовка</label>
+                        <div class="inline-controls">
+                            <select id="titleWeight">
+                                <option value="300">Light</option>
+                                <option value="400" selected>Regular</option>
+                                <option value="500">Medium</option>
+                                <option value="600">Semibold</option>
+                                <option value="700">Bold</option>
+                            </select>
+                            <select id="titleSize">
+                                <option value="32">32px</option>
+                                <option value="36">36px</option>
+                                <option value="40">40px</option>
+                                <option value="44" selected>44px</option>
+                                <option value="48">48px</option>
+                                <option value="52">52px</option>
+                                <option value="56">56px</option>
+                                <option value="60">60px</option>
+                                <option value="64">64px</option>
+                                <option value="68">68px</option>
+                                <option value="72">72px</option>
+                                <option value="76">76px</option>
+                                <option value="80">80px</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="textFont">Шрифт текста</label>
+                        <select id="textFont" class="font-select">
+                            <option value="Helvetica" selected>Helvetica</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Better VCR">Better VCR</option>
+                            <option value="Brusnika">Brusnika</option>
+                            <option value="Maki Sans">Maki Sans</option>
+                            <option value="Nauryz">Nauryz</option>
+                            <option value="custom">Свой шрифт (URL)</option>
+                        </select>
+                        <input type="text" id="textFontCustom" placeholder="Например: https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" style="display: none; margin-top: 6px;">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Стиль текста</label>
+                        <div class="inline-controls">
+                            <select id="textWeight">
+                                <option value="300">Light</option>
+                                <option value="400" selected>Regular</option>
+                                <option value="500">Medium</option>
+                                <option value="600">Semibold</option>
+                                <option value="700">Bold</option>
+                            </select>
+                            <select id="fontSize">
+                                <option value="24">24px</option>
+                                <option value="28">28px</option>
+                                <option value="32">32px</option>
+                                <option value="36">36px</option>
+                                <option value="40" selected>40px</option>
+                                <option value="44">44px</option>
+                                <option value="48">48px</option>
+                                <option value="52">52px</option>
+                                <option value="56">56px</option>
+                                <option value="60">60px</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="footerFont">Шрифт футера</label>
+                        <select id="footerFont" class="font-select">
+                            <option value="Helvetica" selected>Helvetica</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Better VCR">Better VCR</option>
+                            <option value="Brusnika">Brusnika</option>
+                            <option value="Maki Sans">Maki Sans</option>
+                            <option value="Nauryz">Nauryz</option>
+                            <option value="custom">Свой шрифт (URL)</option>
+                        </select>
+                        <input type="text" id="footerFontCustom" placeholder="Например: https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" style="display: none; margin-top: 6px;">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Стиль футера</label>
+                        <div class="inline-controls">
+                            <select id="footerWeight">
+                                <option value="300">Light</option>
+                                <option value="400" selected>Regular</option>
+                                <option value="500">Medium</option>
+                                <option value="600">Semibold</option>
+                                <option value="700">Bold</option>
+                            </select>
+                            <select id="footerSize">
+                                <option value="24">24px</option>
+                                <option value="28">28px</option>
+                                <option value="32" selected>32px</option>
+                                <option value="36">36px</option>
+                                <option value="40">40px</option>
+                                <option value="44">44px</option>
+                                <option value="48">48px</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Цвета</h3>
+                    
+                    <div class="input-group">
+                        <label>Цвет фона</label>
+                        <div class="inline-controls">
+                            <input type="color" id="bgColor" value="#667eea">
+                            <input type="text" id="bgColorHex" value="#667eea" placeholder="#667eea">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Цвет заголовка</label>
+                        <div class="inline-controls">
+                            <input type="color" id="titleColor" value="#ffffff">
+                            <input type="text" id="titleColorHex" value="#ffffff" placeholder="#ffffff">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Цвет текста</label>
+                        <div class="inline-controls">
+                            <input type="color" id="textColor" value="#ffffff">
+                            <input type="text" id="textColorHex" value="#ffffff" placeholder="#ffffff">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Цвет подписи</label>
+                        <div class="inline-controls">
+                            <input type="color" id="footerColor" value="#ffffff">
+                            <input type="text" id="footerColorHex" value="#ffffff" placeholder="#ffffff">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <button id="addSlideBtn" class="btn-add">Добавить слайд</button>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Результат</h2>
+            <p class="results-info">Размер: 1012×1350px (4:5). Кликните на слайд чтобы скачать.</p>
+            <div id="slidesContainer" class="slides-container"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
