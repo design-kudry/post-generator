@@ -234,7 +234,7 @@ body {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('Chevron.svg');
+    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.96967 5.46967C3.26256 5.17678 3.73744 5.17678 4.03033 5.46967L8 9.43934L11.9697 5.46967C12.2626 5.17678 12.7374 5.17678 13.0303 5.46967C13.3232 5.76256 13.3232 6.23744 13.0303 6.53033L8.53033 11.0303C8.23744 11.3232 7.76256 11.3232 7.46967 11.0303L2.96967 6.53033C2.67678 6.23744 2.67678 5.76256 2.96967 5.46967Z" fill="white"/></svg>');
     background-repeat: no-repeat;
     background-position: right 16px center;
     background-size: 16px 16px;
@@ -444,7 +444,7 @@ body {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('Chevron.svg');
+    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.96967 5.46967C3.26256 5.17678 3.73744 5.17678 4.03033 5.46967L8 9.43934L11.9697 5.46967C12.2626 5.17678 12.7374 5.17678 13.0303 5.46967C13.3232 5.76256 13.3232 6.23744 13.0303 6.53033L8.53033 11.0303C8.23744 11.3232 7.76256 11.3232 7.46967 11.0303L2.96967 6.53033C2.67678 6.23744 2.67678 5.76256 2.96967 5.46967Z" fill="white"/></svg>');
     background-repeat: no-repeat;
     background-position: right 16px center;
     background-size: 16px 16px;
@@ -535,13 +535,16 @@ button:disabled {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: Arial, sans-serif;
-    box-shadow: 0px 4px 16px rgba(255, 115, 58, 0.25);
     height: 44px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-add:hover {
     background: #FF8554;
-    box-shadow: 0px 6px 20px rgba(255, 115, 58, 0.35);
+    box-shadow: 0px 4px 16px rgba(255, 115, 58, 0.25);
     transform: none;
 }
 
@@ -688,11 +691,14 @@ button:disabled {
 
 /* Footer */
 .form-footer {
+    align-self: stretch;
     padding: 24px 32px;
-    border-top: 1px solid #363636;
     background: #020202;
-    display: flex;
+    border-top: 1px solid #363636;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: flex;
 }
 
 /* Дополнительные элементы */
