@@ -527,6 +527,7 @@ button:disabled {
     align-self: stretch;
     height: 44px;
     padding: 14px 24px;
+    margin: 0 32px;
     background: var(--accent-color);
     overflow: hidden;
     border-radius: 20px;
@@ -693,7 +694,7 @@ button:disabled {
 /* Footer */
 .form-footer {
     align-self: stretch;
-    padding: 24px 32px;
+    padding: 24px 0;
     background: #020202;
     border-top: 1px solid #363636;
     flex-direction: column;
