@@ -679,10 +679,23 @@ button:disabled {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.slide-btn::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10.5L5.5 8L6.55 6.95L7.25 7.65V3.5H8.75V7.65L9.45 6.95L10.5 8L8 10.5ZM4 12.5C3.58579 12.5 3.25 12.1642 3.25 11.75V9.5H4.75V11H11.25V9.5H12.75V11.75C12.75 12.1642 12.4142 12.5 12 12.5H4Z" fill="%23F2F2F2"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .slide-btn:hover {
     background: #FF8554;
-    border-color: #FF8554;
-    transform: translateY(-2px);
+    transform: none;
+}
+
+.slide-btn-secondary:hover {
+    background: rgba(80, 80, 80, 0.46);
 }
 
 .slide-btn-secondary {
@@ -698,6 +711,16 @@ button:disabled {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 0;
+}
+
+.slide-btn-secondary::before {
+    content: '';
+    width: 13px;
+    height: 14.5px;
+    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 2.5V3H3V4.5H3.5V12.5C3.5 13.0523 3.94772 13.5 4.5 13.5H11.5C12.0523 13.5 12.5 13.0523 12.5 12.5V4.5H13V3H9.5V2.5H6.5ZM5 4.5H11V12H5V4.5ZM6.5 6V10.5H8V6H6.5ZM8.5 6V10.5H10V6H8.5Z" fill="%23969696"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .slide-btn-secondary:hover {
