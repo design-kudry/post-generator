@@ -102,7 +102,6 @@ body {
 }
 
 .form-body {
-    flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 32px;
@@ -110,6 +109,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 32px;
+    flex-shrink: 1;
     min-height: 0;
 }
 
